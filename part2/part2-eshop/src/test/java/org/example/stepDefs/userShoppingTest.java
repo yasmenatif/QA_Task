@@ -64,9 +64,9 @@ public class userShoppingTest {
         Thread.sleep(2000);
 
         logIn.mobileNoInput.clear();
-        logIn.mobileNoInput.sendKeys("01099791462");
+        logIn.mobileNoInput.sendKeys("your phone number");
         logIn.passInput.clear();
-        logIn.passInput.sendKeys("Asad@1959");
+        logIn.passInput.sendKeys("your password");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(logIn.goToYourAccount));
@@ -92,8 +92,14 @@ public class userShoppingTest {
         prodDetails.addToCart.click();
 
         //verify first item was added successfully
-        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
-        prodDetails.itemAddedSuccessfully.isDisplayed();
+        WebElement itemAddedMessage = prodDetails.itemAddedSuccessfully;
+
+        // Wait for the visibility of the message
+        wait.until(ExpectedConditions.visibilityOf(itemAddedMessage));
+
+        // Verify that the message is displayed
+        boolean isMessageDisplayed = itemAddedMessage.isDisplayed();
+        softAssert.assertTrue(isMessageDisplayed, "The item added successfully message should be displayed.");
 
         test.log(Status.INFO, "Added first item to cart");
 
@@ -108,12 +114,16 @@ public class userShoppingTest {
         scrollToElement(home.selectSecondItem);
         home.selectSecondItem.click();
 
-        //verify second item was added successfully
-        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
-        prodDetails.itemAddedSuccessfully.isDisplayed();
 
         wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
         prodDetails.addToCart.click();
+
+        // Wait for the visibility of the message
+        wait.until(ExpectedConditions.visibilityOf(itemAddedMessage));
+
+        // Verify that the message is displayed
+        boolean isMessageDisplayed2 = itemAddedMessage.isDisplayed();
+        softAssert.assertTrue(isMessageDisplayed2, "The item added successfully message should be displayed.");
 
         test.log(Status.INFO, "Added second item to cart");
 
@@ -129,9 +139,12 @@ public class userShoppingTest {
         wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
         prodDetails.addToCart.click();
 
-        //verify third item was added successfully
-        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
-        prodDetails.itemAddedSuccessfully.isDisplayed();
+        // Wait for the visibility of the message
+        wait.until(ExpectedConditions.visibilityOf(itemAddedMessage));
+
+        // Verify that the message is displayed
+        boolean isMessageDisplayed3 = itemAddedMessage.isDisplayed();
+        softAssert.assertTrue(isMessageDisplayed3, "The item added successfully message should be displayed.");
 
 
         test.log(Status.INFO, "Added third item to cart");
