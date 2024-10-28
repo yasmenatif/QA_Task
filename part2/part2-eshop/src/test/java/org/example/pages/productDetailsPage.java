@@ -16,6 +16,8 @@ public class productDetailsPage {
     public WebElement addToCart;
 
 
+    @FindBy(xpath = "//div[@class=\"alert-box-container system-alert\"]")
+    public WebElement itemAddedSuccessfully;
 
 
 //    String itemName1 = Hooks.driver.findElement(By.xpath("//div[@class=\"--product-name\"]")).getText();

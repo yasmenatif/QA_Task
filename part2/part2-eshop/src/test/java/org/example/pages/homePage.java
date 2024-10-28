@@ -26,6 +26,9 @@ public class homePage {
     @FindBy(xpath = "//button[@class=\"close-modal-desktop\"]")
     public WebElement closeOfferWindow;
 
+    @FindBy(xpath = "//button[@class=\"btn btn-primary\"]")
+    public WebElement loginButton;
+
     @FindBy(xpath = "//div[@id=\"Top Selling\"]//vf-product-box[@class=\"scrollItem\"][1]")
     public WebElement selectFirstItem;
 

@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.qameta.allure.Step;
 import org.example.pages.cartPage;
 import org.example.pages.homePage;
 import org.example.pages.loginPage;
@@ -31,14 +32,22 @@ public class userShoppingTest {
     WebDriver driver = Hooks.driver;
 
 
+    @Step("Open the eShop website")
     @Given("I open the eShop website")
-    public void openUrl(){
+    public void openUrl() throws InterruptedException {
 
         driver.get("https://eshop.vodafone.com.eg/shop/home");
         home.initialPage.click();
-        home.closeOfferWindow.click();
+
+        Thread.sleep(3000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOf(home.closeCookiesSettings));
 
         home.closeCookiesSettings.click();
+
+        wait.until(ExpectedConditions.visibilityOf(home.loginButton));
+
+        home.loginButton.click();
 
         ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Navigated to eShop website");
 
@@ -46,9 +55,10 @@ public class userShoppingTest {
 
     }
 
+    @Step("I login to my account")
     @And("I login to my account")
     public void iLoginToMyAccount() throws InterruptedException {
-        logIn.goToLoginPage.click();
+//        logIn.goToLoginPage.click();
 
         Thread.sleep(2000);
 
@@ -69,41 +79,57 @@ public class userShoppingTest {
     }
 
 
+    @Step("I select and add items to the cart")
     @When("I select and add items to the cart")
     public void iSelectAndAddItemsToTheCart() throws InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+        //add first item
         wait.until(ExpectedConditions.elementToBeClickable(home.selectFirstItem));
         scrollToElement(home.selectFirstItem);
         home.selectFirstItem.click();
         prodDetails.addToCart.click();
 
+        //verify first item was added successfully
+        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
+        prodDetails.itemAddedSuccessfully.isDisplayed();
+
+        //go back to home page
         driver.navigate().back();
 
         Thread.sleep(2000);
 
+        //add second item
         wait.until(ExpectedConditions.elementToBeClickable(home.selectSecondItem));
         scrollToElement(home.selectSecondItem);
         home.selectSecondItem.click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
+        //verify second item was added successfully
+        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
+        prodDetails.itemAddedSuccessfully.isDisplayed();
 
+        wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
         prodDetails.addToCart.click();
 
         Thread.sleep(2000);
 
+        //select TV choice in search bar
         wait.until(ExpectedConditions.elementToBeClickable(home.searchBarTVChoice));
-
         home.searchBarTVChoice.click();
+
+        //add third item
         wait.until(ExpectedConditions.elementToBeClickable(home.selectThirdItem));
-
         home.selectThirdItem.click();
-
         wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
-
         prodDetails.addToCart.click();
 
+        //verify second item was added successfully
+        wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
+        prodDetails.itemAddedSuccessfully.isDisplayed();
+
         Thread.sleep(2000);
+
 
 
         ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Added three items to cart");
@@ -112,6 +138,7 @@ public class userShoppingTest {
 
     }
 
+    @Step("I should see the items in my cart")
     @Then("I should see the items in my cart")
     public void iShouldSeeTheItemsInMyCart() throws InterruptedException {
         cart.goToCartPage.click();
