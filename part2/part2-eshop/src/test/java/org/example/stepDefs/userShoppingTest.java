@@ -1,15 +1,16 @@
 package org.example.stepDefs;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.qameta.allure.Step;
 import org.example.pages.cartPage;
 import org.example.pages.homePage;
 import org.example.pages.loginPage;
 import org.example.pages.productDetailsPage;
-import org.example.utils.ExtentManager;
+import utils.ExtentManager;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,7 +21,8 @@ import org.testng.asserts.SoftAssert;
 import java.time.Duration;
 
 public class userShoppingTest {
-//    WebDriver driver = ExtentReportListener.driver;
+
+    ExtentTest test = ExtentManager.getTest();
 
     cartPage cart = new cartPage();
     homePage home = new homePage();
@@ -32,7 +34,6 @@ public class userShoppingTest {
     WebDriver driver = Hooks.driver;
 
 
-    @Step("Open the eShop website")
     @Given("I open the eShop website")
     public void openUrl() throws InterruptedException {
 
@@ -49,13 +50,13 @@ public class userShoppingTest {
 
         home.loginButton.click();
 
-        ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Navigated to eShop website");
+        test.log(Status.INFO, "Navigated to eShop website");
+
 
 
 
     }
 
-    @Step("I login to my account")
     @And("I login to my account")
     public void iLoginToMyAccount() throws InterruptedException {
 //        logIn.goToLoginPage.click();
@@ -73,13 +74,12 @@ public class userShoppingTest {
 
         logIn.goToYourAccount.click();
 
-        ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Signed in successfully");
+        test.log(Status.INFO, "Signed in successfully");
 
 
     }
 
 
-    @Step("I select and add items to the cart")
     @When("I select and add items to the cart")
     public void iSelectAndAddItemsToTheCart() throws InterruptedException {
 
@@ -95,8 +95,11 @@ public class userShoppingTest {
         wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
         prodDetails.itemAddedSuccessfully.isDisplayed();
 
+        test.log(Status.INFO, "Added first item to cart");
+
         //go back to home page
         driver.navigate().back();
+
 
         Thread.sleep(2000);
 
@@ -112,6 +115,8 @@ public class userShoppingTest {
         wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
         prodDetails.addToCart.click();
 
+        test.log(Status.INFO, "Added second item to cart");
+
         Thread.sleep(2000);
 
         //select TV choice in search bar
@@ -124,21 +129,19 @@ public class userShoppingTest {
         wait.until(ExpectedConditions.elementToBeClickable(prodDetails.addToCart));
         prodDetails.addToCart.click();
 
-        //verify second item was added successfully
+        //verify third item was added successfully
         wait.until(ExpectedConditions.visibilityOf(prodDetails.itemAddedSuccessfully));
         prodDetails.itemAddedSuccessfully.isDisplayed();
+
+
+        test.log(Status.INFO, "Added third item to cart");
 
         Thread.sleep(2000);
 
 
 
-        ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Added three items to cart");
-
-
-
     }
 
-    @Step("I should see the items in my cart")
     @Then("I should see the items in my cart")
     public void iShouldSeeTheItemsInMyCart() throws InterruptedException {
         cart.goToCartPage.click();
@@ -158,7 +161,8 @@ public class userShoppingTest {
 
         softAssert.assertAll();
 
-        ExtentManager.getTest().log(com.aventstack.extentreports.Status.INFO, "Verified items are in cart");
+        test.log(Status.INFO, "Verified items are in cart");
+
 
     }
 

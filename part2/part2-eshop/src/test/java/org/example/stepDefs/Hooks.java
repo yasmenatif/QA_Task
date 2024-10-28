@@ -1,11 +1,12 @@
 package org.example.stepDefs;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import org.example.utils.ExtentManager;
+import utils.ExtentManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -16,7 +17,8 @@ public class Hooks {
     public static WebDriver driver;
 
 
-
+    private static ExtentReports extent = ExtentManager.getReporterObject();
+    private static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
 
     @Before
     public void setUp(Scenario scenario){
@@ -26,7 +28,8 @@ public class Hooks {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(300));
         driver.get("https://www.google.com/");
 
-        ExtentTest test = ExtentManager.getExtentReports().createTest(scenario.getName());
+        ExtentTest test = extent.createTest(scenario.getName());
+        extentTest.set(test);
         ExtentManager.setTest(test);
         ExtentManager.getTest().log(Status.INFO, "Starting scenario: " + scenario.getName());
 
@@ -34,7 +37,7 @@ public class Hooks {
 
 
     @After
-    public void shutDown(Scenario scenario) throws InterruptedException {
+    public void shutDown(Scenario scenario) {
 
         if (scenario.isFailed()) {
             ExtentManager.getTest().log(Status.FAIL, "Test Failed: " + scenario.getName());
@@ -44,9 +47,13 @@ public class Hooks {
         if (driver != null) {
             driver.quit();
         }
-        ExtentManager.endTest();
+
+    }
+        public static ExtentTest getTest() {
+            return extentTest.get();
+        }
 
     }
 
 
-}
+
